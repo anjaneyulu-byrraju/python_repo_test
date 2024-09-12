@@ -1,0 +1,89 @@
+name: verademo-python
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'  # Specify the Python version you need
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Package Python app
+      run: |
+        python setup.py sdist bdist_wheel  # If using setuptools for packaging
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: verademo-python-package
+        path: dist/verademo-python-package  # Adjust path as needed for your project package
+
+  pipeline_scan:
+    needs: build
+    runs-on: ubuntu-latest
+    name: pipeline scan
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Get package artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: verademo-python-package
+
+      - name: Pipeline-scan action step
+        id: pipeline-scan
+        uses: veracode/Veracode-pipeline-scan-action@esd-true
+        with:
+          vid: ${{ secrets.VID }}
+          vkey: ${{ secrets.VKEY }}
+          file: "dist/verademo-python-package.zip"  # Adjust the file name accordingly
+          request_policy: "Veracode Recommended SCA Very Low"
+          debug: 1
+          fail_build: false
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Veracode Pipeline-Scan Results
+          path: results.json
+
+  veracode-fix:
+    runs-on: ubuntu-latest
+    needs: pipeline_scan
+    name: create fixes
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Get flaw file
+        uses: actions/download-artifact@v4
+        with:
+          name: Veracode Pipeline-Scan Results
+
+      - name: Create fixes from static findings
+        id: convert
+        uses: Veracode/veracode-fix@main
+        with:
+          inputFile: results.json
+          vid: ${{ secrets.VID }}
+          vkey: ${{ secrets.VKEY }}
+          source_base_path_1: "samples"  # Adjust the paths based on your Python project structure
+          language: python
+          prComment: true
+          cwe: '89'
+          DEBUG: true
+          fixType: batch
+          files: changed
+          createPR: true

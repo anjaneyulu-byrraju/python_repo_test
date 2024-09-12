@@ -1,0 +1,4 @@
+requests
+veracode-api-signing
+urllib
+Pygments
