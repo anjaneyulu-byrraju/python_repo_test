@@ -1,4 +1,4 @@
 requests
 veracode-api-signing
-urllib
+urllib3
 Pygments
