@@ -51,7 +51,7 @@ jobs:
         with:
           vid: ${{ secrets.VID }}
           vkey: ${{ secrets.VKEY }}
-          file: "verademo-python-package.zip"  # Adjust based on actual path
+          file: verademo-python-package.zip  # Adjust based on actual path
           request_policy: "Veracode Recommended SCA Very Low"
           debug: 1
           fail_build: false
