@@ -30,6 +30,10 @@ jobs:
       with:
         name: verademo-python-package
         path: dist/   # Adjust path as needed for your project package
+    - name: List files in dist directory
+      run: |
+        echo "Files in the dist directory:"
+        ls -l dist
 
   pipeline_scan:
     needs: build
