@@ -26,28 +26,12 @@ jobs:
       run: |
         python setup.py sdist bdist_wheel  # Builds source dist and wheel
         zip -r dist/verademo-python-package.zip dist/  # Zip the contents of the dist directory 
-        
-    - name: Set permissions on ZIP file
-      run: |
-        chmod 755 dist/verademo-python-package.zip
-
-    - name: List all files
-      run: |
-        find . -name "verademo-python-package.zip"
-
     - uses: actions/upload-artifact@v4
       with:
-        name: verademo-python-package
-        path: dist/   # Adjust path as needed for your project package
-    - name: List files in dist directory
-      run: |
-        echo "Files in the dist directory:"
-        ls -l dist
-    - name: Verify downloaded artifact
-      run: |
-        ls -lR .
-  
-
+        name: verademo-python-package.zip
+        path: dist/verademo-python-package.zip     
+      
+      
   pipeline_scan:
     needs: build
     runs-on: ubuntu-latest
@@ -59,7 +43,7 @@ jobs:
       - name: Get package artifact
         uses: actions/download-artifact@v4
         with:
-          name: verademo-python-package
+          name: verademo-python-package.zip
 
       - name: Pipeline-scan action step
         id: pipeline-scan
@@ -76,7 +60,7 @@ jobs:
         with:
           name: Veracode Pipeline-Scan Results
           path: results.json
-
+          
   veracode-fix:
     runs-on: ubuntu-latest
     needs: pipeline_scan
