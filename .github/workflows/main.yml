@@ -25,7 +25,13 @@ jobs:
     - name: Package Python app
       run: |
         python setup.py sdist bdist_wheel  # Builds source dist and wheel
-        zip -r dist/verademo-python-package.zip dist/  # Zip the contents of the dist directory        
+        zip -r dist/verademo-python-package.zip dist/  # Zip the contents of the dist directory 
+    - name: Set permissions on ZIP file
+      run: |
+        chmod 644 dist/verademo-python-package.zip
+    - name: List all files
+      run: |
+        find . -name "verademo-python-package.zip"
 
     - uses: actions/upload-artifact@v4
       with:
@@ -55,7 +61,7 @@ jobs:
         with:
           vid: ${{ secrets.VID }}
           vkey: ${{ secrets.VKEY }}
-          file: "dist/verademo-python-package.zip"  # This matches the file you zipped
+          file: "./path_to_downloaded_file/verademo-python-package.zip"  # Adjust based on actual path
           request_policy: "Veracode Recommended SCA Very Low"
           debug: 1
           fail_build: false
