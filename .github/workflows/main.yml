@@ -24,7 +24,8 @@ jobs:
         pip install -r requirements.txt
     - name: Package Python app
       run: |
-        python setup.py sdist bdist_wheel  # If using setuptools for packaging
+        python setup.py sdist bdist_wheel  # Builds source dist and wheel
+        zip -r dist/verademo-python-package.zip dist/  # Zip the contents of the dist directory        
 
     - uses: actions/upload-artifact@v4
       with:
@@ -54,7 +55,7 @@ jobs:
         with:
           vid: ${{ secrets.VID }}
           vkey: ${{ secrets.VKEY }}
-          file: "dist/verademo-python-package.zip"  # Adjust the file name accordingly
+          file: "dist/verademo-python-package.zip"  # This matches the file you zipped
           request_policy: "Veracode Recommended SCA Very Low"
           debug: 1
           fail_build: false
