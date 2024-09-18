@@ -86,10 +86,11 @@ jobs:
           inputFile: results.json
           vid: ${{ secrets.VID }}
           vkey: ${{ secrets.VKEY }}
-          source_base_path_1: "app/commands/"
+          source_base_path_1: "app/views/"
           language: python
           createPR: true
+          cwe: '89'
           DEBUG: true
           fixType: batch
-          files: all
+          files: changed
           prComment: true
