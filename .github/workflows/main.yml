@@ -86,6 +86,7 @@ jobs:
           inputFile: results.json
           vid: ${{ secrets.VID }}
           vkey: ${{ secrets.VKEY }}
+          source_base_path_1: "application/:application/"
           language: python
           prComment: true
           DEBUG: true
