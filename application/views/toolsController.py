@@ -5,7 +5,7 @@ import os
 
 
 from django.shortcuts import render
-from app.fortune.fortuneData import FortuneData, RiddleData
+from application.fortune.fortuneData import FortuneData, RiddleData
 
 
 
