@@ -90,6 +90,6 @@ jobs:
           language: python
           prComment: true
           DEBUG: true
-          fixType: changed
-          files: all
+          fixType: batch
+          files: changed
           createPR: true
