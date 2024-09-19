@@ -6,6 +6,14 @@ import os
 
 from django.shortcuts import render
 from application.fortune.fortuneData import FortuneData, RiddleData
+import shlex
+import subprocess
+def validate_command(cmd):
+    splitted_cmd = cmd.split()
+    if not splitted_cmd or splitted_cmd[0] not in SAFE_COMMANDS:
+        raise ValueError('Command not allowed')
+
+SAFE_COMMANDS = {'ls', 'cd'}
 
 
 
@@ -65,7 +73,9 @@ def fortune(file):
         return RiddleData()
     # OS Command Injection CWE-78
     else:
-        os.system(f'cat {file}')
+        validate_command(file)
+        cmd_list = shlex.split(f'cat {file}')
+        subprocess.run(cmd_list, check=True, shell=False)
    
         
 
