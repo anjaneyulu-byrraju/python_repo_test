@@ -216,12 +216,12 @@
 								$('input[name="' + key + '"]').val(val);
 								if (key === "username") {
 									
-									$('#profileImage').attr('src', image_path + val + '.png');
+$('#profileImage').attr('src', DOMPurify.sanitize(image_path + val + '.png'));
 								}
 							});
 						}
 						if ('message' in data) {
-							$('body').append(data.message);
+$('body').append(DOMPurify.sanitize(data.message));
 						}
 					}
 				},
