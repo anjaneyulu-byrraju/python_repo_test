@@ -9,7 +9,7 @@ import httplib2
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate
 from django.db import connection, transaction
-from app.models import create
+from application.models import create
 
 
 
@@ -181,3 +181,4 @@ def loadFile(filename):
         for line in lines:
             line.strip()
     return lines
+
