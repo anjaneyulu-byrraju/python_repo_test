@@ -48,7 +48,7 @@ def feed(request):
 
                 logger.info("Executing query to get all 'Blabs for me'")
                 blabsForMe = sqlBlabsForMe.format(10, 0)
-                cursor.execute(blabsForMe % (username,))
+                cursor.execute("%s" % blabsForMe, (username, ))
                 blabsForMeResults = cursor.fetchall()
 
                 feedBlabs = []
@@ -159,7 +159,7 @@ def morefeed(request):
 
             logger.info("Executing query to see more Blabs")
             blabsForMe = sqlBlabsForMe.format(len, cnt)
-            cursor.execute(blabsForMe % (username,))
+            cursor.execute("%s", (username, ))
             results = cursor.fetchall()
             ret = ""
             for blab in results:
@@ -170,7 +170,7 @@ def morefeed(request):
     except Exception as e:
         logger.error("Unexpected error", e)
 
-    return HttpResponse(ret)
+    return escape(HttpResponse(ret))
     
 # Brings up the page to view a blab, or to write a blab
 def blab(request):
@@ -297,7 +297,7 @@ def blabbers(request):
 
                 logger.info(blabbersSql)
                 logger.info("Executing query to see Blab details")
-                cursor.execute(blabbersSql % (username, username))
+                cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
                 blabbersResults = cursor.fetchall()
 
                 blabbers = []
