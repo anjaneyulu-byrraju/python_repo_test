@@ -81,15 +81,16 @@ jobs:
           
       - name: Create fixes from static findings
         id: convert
-        uses: Veracode/veracode-fix@feature/add-client-header
+        uses: Veracode/veracode-fix@expression-pythonDebug
         with:
           inputFile: results.json
           vid: ${{ secrets.VID }}
           vkey: ${{ secrets.VKEY }}
-          source_base_path_1: "app/commands/"
+          source_base_path_1: "application/:application/"
           language: python
-          createPR: true
+          prComment: true
           DEBUG: true
           fixType: batch
           files: all
-          prComment: true
+          createPR: true
+
