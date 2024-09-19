@@ -181,3 +181,4 @@ def loadFile(filename):
         for line in lines:
             line.strip()
     return lines
+

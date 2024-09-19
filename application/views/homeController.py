@@ -21,4 +21,3 @@ def home(request):
             return redirect('feed')
     
     return login(request)
-
