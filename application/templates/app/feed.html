@@ -157,7 +157,7 @@
 				len : 10
 			}, function(data) {
 				if (data) {
-					$("#feed ul").append(data);
+$("#feed ul").append(DOMPurify.sanitize(data));
 				} else {
 					$(obj).remove();
 				}
