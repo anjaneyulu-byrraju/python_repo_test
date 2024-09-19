@@ -72,7 +72,7 @@ def feed(request):
                 # Find the Blabs by this user
 
                 logger.info("Executing query to get all of user's Blabs")
-                cursor.execute(sqlBlabsByMe % (username,))
+                cursor.execute("SELECT * FROM blabsByMe %s;", (username, ))
                 blabsByMeResults = cursor.fetchall()
 
                 myBlabs = []
@@ -117,7 +117,7 @@ def feed(request):
                 addBlabSql = "INSERT INTO blabs (blabber, content, timestamp) values ('%s', '%s', datetime('now'));"
 
                 logger.info("Executing query to add new blab")
-                cursor.execute(addBlabSql % (username, blab))
+                cursor.execute("INSERT INTO blabs (blabber, content, timestamp) values (?,?, datetime(now))", [username, blab])
 
                 if not cursor.rowcount:
                     request.error = "Failed to add blab"
@@ -159,7 +159,7 @@ def morefeed(request):
 
             logger.info("Executing query to see more Blabs")
             blabsForMe = sqlBlabsForMe.format(len, cnt)
-            cursor.execute(blabsForMe % (username,))
+            cursor.execute("%s %s", (username, ))
             results = cursor.fetchall()
             ret = ""
             for blab in results:
@@ -170,7 +170,7 @@ def morefeed(request):
     except Exception as e:
         logger.error("Unexpected error", e)
 
-    return HttpResponse(ret)
+    return escape(HttpResponse(ret))
     
 # Brings up the page to view a blab, or to write a blab
 def blab(request):
@@ -198,7 +198,7 @@ def blab(request):
             with connection.cursor() as cursor:
 
                 logger.info("Executing query to see Blab details")
-                cursor.execute(blabDetailsSql % (blabid,))
+                cursor.execute(blabDetailsSql, (blabid, ))
                 blabDetailsResults = cursor.fetchone()
 
                 if (blabDetailsResults):
@@ -208,7 +208,7 @@ def blab(request):
 
                     # Get comments
                     logger.info("Executing query to get all comments")
-                    cursor.execute(blabCommentsSql % (blabid,))
+                    cursor.execute("%s" % (blabCommentsSql, (blabid, )))
                     blabCommentsResults = cursor.fetchall()
 
                     comments = []
@@ -297,7 +297,7 @@ def blabbers(request):
 
                 logger.info(blabbersSql)
                 logger.info("Executing query to see Blab details")
-                cursor.execute(blabbersSql % (username, username))
+                cursor.execute("SELECT * FROM blabbers WHERE username = %s;", (username, ))
                 blabbersResults = cursor.fetchall()
 
                 blabbers = []
