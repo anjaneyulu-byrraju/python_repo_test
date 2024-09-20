@@ -7,3 +7,4 @@ def list_files(directory):
 # Example usage
 user_input = input("Enter the directory to list files: ")
 list_files(user_input)
+
