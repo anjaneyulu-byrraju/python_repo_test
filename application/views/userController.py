@@ -22,6 +22,8 @@ import mimetypes
 
 from app.models import User, Blabber
 from app.forms import RegisterForm
+from html import escape
+from flask import Flask, make_response, jsonify
 
 
 # Get logger
@@ -108,7 +110,7 @@ def login(request):
                 parsed = sqlparse.parse(sqlQuery)[0]
                 logger.info("Attempted login with username and password: " + parsed[8].value)
 
-                cursor.execute(sqlQuery)
+                cursor.execute("SELECT * FROM users WHERE username=%s;", (username,))
                 # END VULN CODE
                 # GOOD CODE
                 # sqlQuery = "select username, password, password_hint, created_at, last_login, \
@@ -135,8 +137,8 @@ def login(request):
                                     blab_name=row["blab_name"])
                         response = updateInResponse(currentUser, response)
 
-                    update = "UPDATE users SET last_login=datetime('now') WHERE username='" + row['username'] + "';"
-                    cursor.execute(update)
+                    update = "UPDATE users SET last_login=datetime(now) WHERE username=%s;"
+                    cursor.execute(update, (username,))
 
                     # if the username ends with "totp", add the TOTP login step
                     if username[-4:].lower() == "totp":
@@ -181,9 +183,9 @@ def showPasswordHint(request):
     try:
         logger.info("Creating the Database connection")
         with connection.cursor() as cursor:
-            sql = "SELECT password_hint FROM users WHERE username = '" + username + "'"
+            sql = "SELECT password_hint FROM users WHERE username = %s"
             logger.info(sql)
-            cursor.execute(sql)
+            cursor.execute(sql, (username,))
             row = cursor.fetchone()
             
             if (row):
@@ -194,9 +196,9 @@ def showPasswordHint(request):
                 formatString = "Username '" + username + "' has password: {}"
                 hint = formatString.format(password[:2] + ("*" * (len(password) - 2)))
                 logger.info(hint)
-                return HttpResponse(hint)
+                return HttpResponse(escape(hint))
             else:
-                return HttpResponse("No password found for " + username)
+                return HttpResponse(escape("No password found for " + username))
     except DatabaseError as db_err:
             logger.error("Database error", db_err)
             return HttpResponse("ERROR!") 
@@ -222,9 +224,9 @@ def showTotp(request):
         #Create db connection
         with connection.cursor() as cursor:
 
-            sql = "SELECT totp_secret FROM users WHERE username = '" + username + "'"
+            sql = "SELECT totp_secret FROM users WHERE username = %s"
             logger.info(sql)
-            cursor.execute(sql)
+            cursor.execute(sql, (username,))
 
             result = cursor.fetchone()
         if result:
@@ -256,9 +258,9 @@ def processTotp(request):
         
         with connection.cursor() as cursor:
         
-            sql = "SELECT totp_secret FROM users WHERE username = '" + username + "'"
+            sql = "SELECT totp_secret FROM users WHERE username = %s"
             logger.info(sql)
-            cursor.execute(sql)
+            cursor.execute(sql, (username,))
 
             result = cursor.fetchone()
             if result:
@@ -338,8 +340,8 @@ def processRegister(request):
     logger.info("Creating the Database connection")
     try:
         with connection.cursor() as cursor:
-            sqlQuery = "SELECT username FROM users WHERE username = '" + username + "'"
-            cursor.execute(sqlQuery)
+            sqlQuery = "SELECT username FROM users WHERE username = %s"
+            cursor.execute(sqlQuery, (username,))
             row = cursor.fetchone()
             if (row):
                 request.error = "Username '" + username + "' already exists!"
@@ -417,7 +419,7 @@ def processRegisterFinish(request):
                 query += ("'" + blabName + "'")
                 query += (");")
                 #execute query
-                cursor.execute(query)
+                cursor.execute(query, (password,))
                 sqlStatement = cursor.fetchone() #<- variable for response
                 logger.info(query)
                 # END EXAMPLE VULNERABILITY
@@ -491,7 +493,7 @@ def showProfile(request):
         with connection.cursor() as cursor:    
             # Find the Blabbers that this user listens to
             logger.info(sqlMyHecklers)
-            cursor.execute(sqlMyHecklers % username)
+            cursor.execute(sqlMyHecklers, (username, ))
             myHecklersResults = cursor.fetchall()
             hecklers=[]
             for i in myHecklersResults:
@@ -508,9 +510,9 @@ def showProfile(request):
             events = []
 
             # START EXAMPLE VULNERABILITY 
-            sqlMyEvents = "select event from users_history where blabber=\"" + username + "\" ORDER BY eventid DESC; "
+            sqlMyEvents = "select event from users_history where blabber=%s ORDER BY eventid DESC; "
             logger.info(sqlMyEvents)
-            cursor.execute(sqlMyEvents)
+            cursor.execute(sqlMyEvents, (username,))
             userHistoryResult = cursor.fetchall()
             # END EXAMPLE VULNERABILITY 
 
@@ -518,9 +520,9 @@ def showProfile(request):
                 events.append(result[0])
 
             # Get the users information
-            sql = "SELECT username, real_name, blab_name, totp_secret FROM users WHERE username = '" + username + "'"
+            sql = "SELECT username, real_name, blab_name, totp_secret FROM users WHERE username = %s"
             logger.info(sql)
-            cursor.execute(sql)
+            cursor.execute(sql, (username,))
             myInfoResults = cursor.fetchone()
             if not myInfoResults:
                 return JsonResponse({'message':'Error, no Inforesults found'})
@@ -557,7 +559,7 @@ def processProfile(request):
     # Initial response only get returns if everything else succeeds.
     # This must be here in order to use set_cookie later in the program
     msg = f"<script>alert('Successfully changed values!\\nusername: {username.lower()}\\nReal Name: {realName}\\nBlab Name: {blabName}');</script>"
-    response = JsonResponse({'values':{"username": username.lower(), "realName": realName, "blabName": blabName}, 'message':msg},status=200)
+    response = JsonResponse(jsonify({'values':{"username": username.lower(), "realName": realName, "blabName": blabName},'message':msg}), status=200)
     
     logger.info("entering processProfile")
     sessionUsername = request.session.get('username')
