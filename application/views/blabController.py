@@ -12,11 +12,11 @@ from django.db import connection
 from django.views.decorators.csrf import csrf_exempt
 
 # These commands are used in blabbers post request.
-from app.commands.BlabberCommand import BlabberCommand
-from app.commands.IgnoreCommand import IgnoreCommand
-from app.commands.ListenCommand import ListenCommand
+from application.commands.BlabberCommand import BlabberCommand
+from application.commands.IgnoreCommand import IgnoreCommand
+from application.commands.ListenCommand import ListenCommand
 
-from app.models import Blab, Blabber, Comment
+from application.models import Blab, Blabber, Comment
 
 # Get logger
 
@@ -355,3 +355,4 @@ def blabbers(request):
             logger.error("Unexpected error", e)
         
         return response
+
