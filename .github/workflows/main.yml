@@ -89,5 +89,5 @@ jobs:
           language: python
           DEBUG: true
           fixType: batch
-          files: changed
+          files: all
           createPR: true
