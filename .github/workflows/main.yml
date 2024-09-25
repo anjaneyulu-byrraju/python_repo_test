@@ -86,7 +86,7 @@ jobs:
           inputFile: results.json
           vid: ${{ secrets.VID }}
           vkey: ${{ secrets.VKEY }}
-          source_base_path_1: "commands/:application/commands/"
+          source_base_path_1: "commands/:app/application/application/commands/"
           language: python
           fixType: batch
           files: all
