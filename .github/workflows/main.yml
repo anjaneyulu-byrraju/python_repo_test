@@ -81,15 +81,12 @@ jobs:
           
       - name: Create fixes from static findings
         id: convert
-        uses: Veracode/veracode-fix@expression-pythonDebug
+        uses: Veracode/veracode-fix@main
         with:
           inputFile: results.json
           vid: ${{ secrets.VID }}
           vkey: ${{ secrets.VKEY }}
           language: python
-          prComment: true
-          DEBUG: true
           fixType: batch
-          files: changed
-          createPR: true
+          files: all
 
