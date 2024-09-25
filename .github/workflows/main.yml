@@ -87,6 +87,6 @@ jobs:
           vid: ${{ secrets.VID }}
           vkey: ${{ secrets.VKEY }}
           language: python
-          fixType: batch
-          files: changed
+          fixType: single
+          files: all
 
