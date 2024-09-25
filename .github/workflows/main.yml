@@ -88,5 +88,5 @@ jobs:
           vkey: ${{ secrets.VKEY }}
           language: python
           fixType: single
-          files: all
+          files: changed
 
