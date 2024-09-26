@@ -3,7 +3,8 @@ import string
 
 def generate_reset_token():
     # Vulnerable: using random.choice() for token generation
-    token = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
+    rand = random.SystemRandom()
+    token = ''.join(rand.choice(string.ascii_letters + string.digits) for _ in range(10))
     return token
 
 # Example usage
