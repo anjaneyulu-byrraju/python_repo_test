@@ -87,8 +87,8 @@ jobs:
           vid: ${{ secrets.VID }}
           vkey: ${{ secrets.VKEY }}
           language: python
-          prComment: true
+          createPR: true
           DEBUG: true
-          fixType: single
+          fixType: batch
           files: all
 
