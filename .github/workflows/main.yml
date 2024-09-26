@@ -90,6 +90,5 @@ jobs:
           prComment: true
           DEBUG: true
           fixType: batch
-          files: changed
-          createPR: true
+          files: all
 
