@@ -1,19 +1,21 @@
 import random
 import string
 from flask import Flask, request
+import secrets
+from flask import Flask, make_response, jsonify
 
 app = Flask(__name__)
 
 def generate_weak_password(length=8):
     """Generate a weak password with insufficient entropy"""
     characters = string.ascii_letters + string.digits
-    return ''.join(random.choice(characters) for _ in range(length))
+    return ''.join(secrets.choice(characters) for _ in range(length))
 
 @app.route("/")
 def home():
     # CWE-80: Reflected XSS vulnerability
     user_input = request.args.get("user")
-    return f"<html><body><h1>Welcome, {user_input}</h1></body></html>"
+    return jsonify(f"<html><body><h1>Welcome, {user_input}</h1></body></html>")
 
 if __name__ == "__main__":
     # CWE-331: Using random module for weak password generation
