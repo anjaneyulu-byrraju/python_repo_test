@@ -10,8 +10,8 @@ def search_user(username):
     cursor = conn.cursor()
     
     # Vulnerable code: direct inclusion of user input in SQL query
-    query = f"SELECT * FROM users WHERE username = '{username}'"
-    cursor.execute(query)
+    query = "SELECT * FROM users WHERE username = %s"
+    cursor.execute(query, (username,))
     
     results = cursor.fetchall()
     conn.close()
