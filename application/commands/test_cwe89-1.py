@@ -16,3 +16,4 @@ def search_user(username):
 # Example usage
 username = input("Enter username: ")
 print(search_user(username))
+
