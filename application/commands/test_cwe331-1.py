@@ -8,4 +8,3 @@ def generate_key():
 # Example usage
 key = generate_key()
 print(f"Generated key: {key}")
-
