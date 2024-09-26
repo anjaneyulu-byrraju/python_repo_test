@@ -7,3 +7,4 @@ def read_file(file_path):
 # Example usage
 user_input = input("Enter the file path to read: ")
 read_file(user_input)
+
