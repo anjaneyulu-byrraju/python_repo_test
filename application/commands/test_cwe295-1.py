@@ -2,7 +2,7 @@ import requests
 
 def get_data_from_server(url):
     # Vulnerable: SSL certificate validation is turned off
-    response = requests.get(url, verify=False)
+    response = requests.get(url)
     return response.text
 
 # Example usage
