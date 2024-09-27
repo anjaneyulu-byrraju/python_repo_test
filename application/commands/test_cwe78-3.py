@@ -8,3 +8,4 @@ def read_file(file_path):
 user_input = input("Enter the file path to read: ")
 read_file(user_input)
 
+
