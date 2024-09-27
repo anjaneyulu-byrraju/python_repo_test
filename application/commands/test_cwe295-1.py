@@ -9,3 +9,4 @@ def get_data_from_server(url):
 url = "https://example.com"
 data = get_data_from_server(url)
 print(data)
+
