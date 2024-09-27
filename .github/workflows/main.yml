@@ -87,7 +87,6 @@ jobs:
           vid: ${{ secrets.VID }}
           vkey: ${{ secrets.VKEY }}
           language: python
-          cwe: '78,89'
           createPR: true
           DEBUG: true
           fixType: batch
