@@ -1,8 +1,9 @@
 import random
+import secrets
 
 def generate_key():
     # Vulnerable: using random.randint() for key generation
-    key = random.randint(0, 2**32 - 1)  # Generates a 32-bit key
+    key = secrets.randint(0, 2**32 - 1)  # Generates a 32-bit key
     return key
 
 # Example usage
